@@ -1,0 +1,190 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>Pipeline Doctor</title><style>
+:root{color-scheme:light;--bg:#f5f6f8;--panel:#fff;--fg:#1b1f24;--mut:#6a7380;--bd:#dde1e7;--acc:#2f6feb;--accfg:#fff;--soft:#eaf1fe;
+--bad:#d93025;--badbg:#fdecea;--ok:#188038;--warn:#b06000;--code:#f0f2f5}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){color-scheme:dark;--bg:#111317;--panel:#1a1d23;--fg:#e6e8eb;--mut:#9099a6;
+--bd:#2b3039;--acc:#6ea0ff;--accfg:#0b1220;--soft:#1f2a40;--bad:#ff7b72;--badbg:#3a1f1f;--ok:#56d364;--warn:#e3b341;--code:#22262e}}
+:root[data-theme=dark]{color-scheme:dark;--bg:#111317;--panel:#1a1d23;--fg:#e6e8eb;--mut:#9099a6;--bd:#2b3039;--acc:#6ea0ff;--accfg:#0b1220;
+--soft:#1f2a40;--bad:#ff7b72;--badbg:#3a1f1f;--ok:#56d364;--warn:#e3b341;--code:#22262e}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input,textarea{font:inherit;color:inherit}
+.app{display:grid;grid-template-columns:280px 1fr;height:100vh}
+aside{background:var(--panel);border-right:1px solid var(--bd);display:flex;flex-direction:column;min-height:0}
+.brand{padding:14px 16px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center}
+.brand small{font-weight:400;color:var(--mut)}
+#q{margin:0 12px 8px;padding:7px 10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg)}
+#dags{overflow:auto;flex:1;padding:0 8px 12px}
+.dag{display:block;width:100%;text-align:left;background:none;border:0;border-radius:8px;padding:8px 10px;cursor:pointer;margin-bottom:2px}
+.dag:hover{background:var(--bg)}.dag.sel{background:var(--soft)}
+.dag .n{font-weight:600;display:flex;align-items:center;gap:8px;word-break:break-all}
+.dag .s{color:var(--mut);font-size:12px;margin-top:1px}
+.dot{width:8px;height:8px;border-radius:50%;flex:none;background:var(--bad)}.dot.work{background:var(--acc);animation:p 1s infinite}.dot.ok{background:var(--ok)}
+@keyframes p{50%{opacity:.25}}
+main{display:flex;flex-direction:column;min-width:0;min-height:0}
+.top{background:var(--panel);border-bottom:1px solid var(--bd);padding:12px 20px 0}
+.top h1{margin:0 0 2px;font-size:18px;word-break:break-all}.top .sub{color:var(--mut);font-size:12.5px;margin-bottom:10px}
+.tabs{display:flex;gap:4px}
+.tab{background:none;border:0;border-bottom:2px solid transparent;padding:8px 14px;cursor:pointer;color:var(--mut)}
+.tab.on{color:var(--acc);border-color:var(--acc);font-weight:600}
+.banner{background:var(--soft);color:var(--acc);padding:8px 20px;font-size:13px;display:flex;gap:8px;align-items:center}
+.body{flex:1;overflow:auto;padding:16px 20px;min-height:0}
+.card{background:var(--panel);border:1px solid var(--bd);border-radius:10px;margin-bottom:12px;overflow:hidden}
+.card summary{cursor:pointer;padding:10px 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.card .t{font-weight:600}.mut{color:var(--mut);font-size:12.5px}
+.badge{font-size:11.5px;padding:1px 8px;border-radius:99px;background:var(--code);color:var(--mut)}
+.badge.bad{background:var(--badbg);color:var(--bad)}
+.card .c{border-top:1px solid var(--bd);padding:12px 16px}
+pre{margin:0;white-space:pre-wrap;word-break:break-word;font:12.5px/1.55 ui-monospace,Consolas,monospace;overflow-x:auto}
+.md p{margin:0 0 8px}.md ul,.md ol{margin:0 0 8px;padding-left:22px}.md h4{margin:10px 0 4px}
+.md code{background:var(--code);padding:1px 5px;border-radius:4px;font:12.5px ui-monospace,Consolas,monospace}
+.md pre{background:var(--code);padding:10px;border-radius:8px;margin:0 0 8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.tile{background:var(--panel);border:1px solid var(--bd);border-radius:10px;padding:12px 14px;cursor:pointer;text-align:left}
+.tile:hover{border-color:var(--acc)}.tile b{display:flex;gap:8px;align-items:center;word-break:break-all}
+.empty{color:var(--mut);text-align:center;padding:56px 12px}
+.chat{display:flex;flex-direction:column;height:100%;max-width:820px;margin:0 auto}
+.msgs{flex:1;overflow:auto;padding-bottom:8px}
+.m{max-width:92%;margin:0 0 12px;padding:9px 13px;border-radius:12px;background:var(--panel);border:1px solid var(--bd)}
+.m.user{margin-left:auto;background:var(--acc);border-color:var(--acc);color:var(--accfg);white-space:pre-wrap;word-break:break-word}
+.m.err{background:var(--badbg);border-color:var(--bad);color:var(--bad)}
+.tools{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.chip{font:11.5px ui-monospace,Consolas,monospace;background:var(--code);color:var(--mut);padding:1px 8px;border-radius:99px}
+.sug{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+.sug button{background:var(--panel);border:1px solid var(--bd);border-radius:99px;padding:6px 14px;cursor:pointer}
+.sug button:hover{border-color:var(--acc);color:var(--acc)}
+.compose{display:flex;gap:8px;padding-top:8px}
+textarea{flex:1;resize:none;border:1px solid var(--bd);border-radius:10px;padding:9px 12px;background:var(--panel);max-height:140px}
+.send{background:var(--acc);color:var(--accfg);border:0;border-radius:10px;padding:0 18px;cursor:pointer;font-weight:600}
+.send:disabled{opacity:.5;cursor:default}
+.link{background:none;border:0;color:var(--mut);cursor:pointer;font-size:12px;text-decoration:underline}
+@media(max-width:760px){.app{grid-template-columns:1fr;grid-template-rows:auto 1fr;height:auto;min-height:100vh}
+aside{border-right:0;border-bottom:1px solid var(--bd);max-height:36vh}.body{padding:12px}.top{padding:10px 12px 0}.banner{padding:8px 12px}}
+</style></head><body><div class="app">
+<aside><div class="brand">Pipeline Doctor <small id="upd"></small></div>
+<input id="q" placeholder="Search DAGs..."><div id="dags"></div></aside>
+<main><div class="top"><h1 id="h"></h1><div class="sub" id="sub"></div><div class="tabs" id="tabs"></div></div>
+<div class="banner" id="bn" hidden></div><div class="body" id="body"></div></main></div>
+<script>
+const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
+const $=id=>document.getElementById(id);
+let data={evidence:[],agent:[]},status={current:null,queued:[]},sig="",sel="",tab="report",busy=false;
+const SUG=["Why did the latest run fail?","Is it safe to retry?","What does this DAG depend on?","How has it been doing lately?"];
+const SUG_ALL=["Which pipelines failed recently?","List my pipelines","Which DAGs are paused?"];
+
+function store(k,v){try{if(v===undefined)return JSON.parse(localStorage.getItem(k)||"null");localStorage.setItem(k,JSON.stringify(v))}catch(e){return null}}
+const chats=()=>store("pd_chats")||{};
+function ago(iso){const s=(Date.now()-new Date(iso))/1000;if(isNaN(s))return iso;
+  if(s<60)return"just now";if(s<3600)return Math.floor(s/60)+" min ago";if(s<86400)return Math.floor(s/3600)+" h ago";return Math.floor(s/86400)+" d ago"}
+function when(iso){const d=new Date(iso);return isNaN(d)?iso:d.toLocaleString()}
+
+/* tiny safe Markdown: paragraphs, lists, headings, code, bold */
+function inline(t){const f=document.createDocumentFragment();
+  t.split(/(\*\*[^*]+\*\*|`[^`]+`)/).forEach(p=>{
+    if(/^\*\*.+\*\*$/.test(p))f.append(el("strong",null,p.slice(2,-2)));
+    else if(/^`.+`$/.test(p))f.append(el("code",null,p.slice(1,-1)));
+    else if(p)f.append(p)});return f}
+function md(text){const root=el("div","md"),L=text.split("\n");let i=0,list=null;
+  while(i<L.length){const l=L[i];
+    if(l.trim().startsWith("```")){const b=[];i++;while(i<L.length&&!L[i].trim().startsWith("```")){b.push(L[i]);i++}i++;list=null;root.append(el("pre",null,b.join("\n")));continue}
+    const li=l.match(/^\s*(?:[-*]|\d+\.)\s+(.*)/);
+    if(li){const ord=/^\s*\d+\./.test(l);if(!list||list.tagName!==(ord?"OL":"UL")){list=el(ord?"ol":"ul");root.append(list)}
+      const x=el("li");x.append(inline(li[1]));list.append(x);i++;continue}
+    list=null;if(!l.trim()){i++;continue}
+    const h=l.match(/^#{1,4}\s+(.*)/),b=el(h?"h4":"p");b.append(inline(h?h[1]:l));root.append(b);i++}
+  return root}
+
+function groups(){const g=new Map();
+  for(const k of ["evidence","agent"])for(const e of data[k]){
+    if(!g.has(e.dag))g.set(e.dag,{name:e.dag,evidence:[],agent:[],last:""});
+    const x=g.get(e.dag);x[k].push(e);if(e.time>x.last)x.last=e.time}
+  return[...g.values()].sort((a,b)=>b.last.localeCompare(a.last))}
+const working=d=>status.current&&status.current.dag_id===d?"work":(status.queued||[]).some(j=>j.dag_id===d)?"work":"";
+
+function renderSide(){const q=$("q").value.toLowerCase(),box=$("dags");box.textContent="";
+  const all=el("button","dag"+(sel===""?" sel":""));all.append(el("div","n","All pipelines"),el("div","s",groups().length+" with activity"));
+  all.onclick=()=>go("",tab==="chat"?"chat":"report");box.append(all);
+  for(const g of groups().filter(g=>g.name.toLowerCase().includes(q))){
+    const b=el("button","dag"+(sel===g.name?" sel":"")),n=el("div","n");
+    n.append(el("span","dot"+(working(g.name)?" work":g.agent.length&&!g.agent[0].failed?" ok":"")),g.name);
+    b.append(n,el("div","s",`${g.agent.length} report${g.agent.length==1?"":"s"} · ${g.evidence.length} log${g.evidence.length==1?"":"s"} · ${ago(g.last)}`));
+    b.onclick=()=>go(g.name,tab==="chat"?"chat":"report");box.append(b)}}
+
+function renderTop(){$("h").textContent=sel||"All pipelines";
+  const g=groups().find(x=>x.name===sel);
+  $("sub").textContent=sel?(g?`Last activity ${ago(g.last)}`:"No reports or logs for this DAG yet"):"Pick a pipeline, or chat with Gemini about all of them";
+  const t=$("tabs");t.textContent="";
+  const defs=sel?[["report","LLM reports"+(g?` (${g.agent.length})`:"")],["logs","Logs"+(g?` (${g.evidence.length})`:"")],["chat","Chat"]]:[["report","Overview"],["chat","Chat"]];
+  for(const[k,label]of defs){const b=el("button","tab"+(tab===k?" on":""),label);b.onclick=()=>go(sel,k);t.append(b)}
+  const bn=$("bn"),c=status.current;
+  bn.hidden=!c&&!(status.queued||[]).length;
+  if(!bn.hidden){bn.textContent="";bn.append(el("span","dot work"));
+    bn.append((c?`Gemini is investigating ${c.dag_id} (${c.running_for}s)`:"Waiting to start")+((status.queued||[]).length?` · ${status.queued.length} queued`:""))}}
+
+function reportCard(e,i){const d=el("details","card");d.open=i===0;
+  const s=el("summary");s.append(el("span","t",when(e.time)),el("span","mut",ago(e.time)));
+  if(e.run)s.append(el("span","badge",e.run.length>30?e.run.slice(0,30)+"…":e.run));
+  let body=e.body;const m=body.match(/\n*\[model: ([^\]]+)\]\s*$/);if(m){body=body.slice(0,m.index);s.append(el("span","badge",m[1]))}
+  if(e.failed)s.append(el("span","badge bad","investigation failed"));
+  const c=el("div","c");if(e.failed)c.append(el("pre",null,body));else c.append(md(body));d.append(s,c);return d}
+function logCard(e,i){const d=el("details","card");d.open=i===0;
+  const s=el("summary");s.append(el("span","t",when(e.time)),el("span","mut",ago(e.time)));
+  if(e.run)s.append(el("span","badge",e.run.length>30?e.run.slice(0,30)+"…":e.run));
+  const f=(e.body.match(/^Failed tasks: (.*)$/m)||[])[1];if(f)s.append(el("span","badge bad",f));
+  const c=el("div","c");c.append(el("pre",null,e.body));d.append(s,c);return d}
+function list(items,fn,empty){const f=document.createDocumentFragment();
+  if(!items.length){f.append(el("div","empty",empty));return f}items.forEach((e,i)=>f.append(fn(e,i)));return f}
+
+function renderBody(){const box=$("body");box.textContent="";
+  if(tab==="chat"){renderChat(box);return}
+  const g=groups().find(x=>x.name===sel);
+  if(!sel){const gs=groups();if(!gs.length){box.append(el("div","empty","Nothing yet. Reports and logs appear here after a DAG fails."));return}
+    const grid=el("div","grid");
+    for(const x of gs){const t=el("button","tile"),b=el("b");b.append(el("span","dot"+(working(x.name)?" work":x.agent.length&&!x.agent[0].failed?" ok":"")),x.name);
+      t.append(b,el("div","mut",`${x.agent.length} LLM report${x.agent.length==1?"":"s"} · ${x.evidence.length} log${x.evidence.length==1?"":"s"}`),
+        el("div","mut","Last activity "+ago(x.last)));t.onclick=()=>go(x.name,"report");grid.append(t)}
+    box.append(grid);return}
+  if(tab==="logs")box.append(list(g?g.evidence:[],logCard,"No logs for this DAG yet. They appear after a task fails."));
+  else box.append(list(g?g.agent:[],reportCard,"No LLM report yet. One is written about a minute after a failure (see the banner above while it runs)."))}
+
+/* chat */
+function renderChat(box){const key=sel,hist=chats()[key]||[];
+  const wrap=el("div","chat"),msgs=el("div","msgs"),form=el("div","compose"),ta=el("textarea");
+  ta.rows=1;ta.placeholder=sel?`Ask Gemini about ${sel}...`:"Ask Gemini about your pipelines...";
+  const send=el("button","send","Send");form.append(ta,send);wrap.append(msgs,form);box.append(wrap);
+  const draw=()=>{msgs.textContent="";
+    if(!hist.length){const e=el("div","empty","Gemini can look up runs, task logs, history and lineage with read-only tools.");
+      const s=el("div","sug");(sel?SUG:SUG_ALL).forEach(t=>{const b=el("button",null,t);b.onclick=()=>ask(t);s.append(b)});e.append(s);msgs.append(e)}
+    hist.forEach(m=>{const d=el("div","m "+(m.role==="user"?"user":m.error?"err":"model"));
+      if(m.role==="user")d.textContent=m.text;else{d.append(m.error?document.createTextNode(m.text):md(m.text));
+        if(m.tools&&m.tools.length){const t=el("div","tools");for(const x of m.tools){const a=x.args||{};
+          t.append(el("span","chip",x.name+"("+Object.values(a).map(v=>String(v).slice(0,24)).join(", ")+")"))}d.append(t)}}
+      msgs.append(d)});
+    if(busy){const d=el("div","m model mut","Gemini is checking tools…");msgs.append(d)}
+    if(hist.length){const c=el("div");const b=el("button","link","Clear chat");b.onclick=()=>{hist.length=0;saveHist(key,hist);draw()};c.append(b);msgs.append(c)}
+    msgs.scrollTop=msgs.scrollHeight;send.disabled=busy};
+  async function ask(text){text=text.trim();if(!text||busy)return;ta.value="";hist.push({role:"user",text});saveHist(key,hist);busy=true;draw();
+    try{const r=await fetch("api/chat",{method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({dag_id:key,messages:hist.filter(m=>!m.error).map(m=>({role:m.role,text:m.text}))})});
+      const j=await r.json();
+      if(!r.ok)hist.push({role:"model",text:j.error||("Error "+r.status),error:true});
+      else hist.push({role:"model",text:j.reply,tools:j.tools,model:j.model})}
+    catch(e){hist.push({role:"model",text:"Request failed: "+e.message,error:true})}
+    busy=false;saveHist(key,hist);if(tab==="chat"&&sel===key)draw()}
+  send.onclick=()=>ask(ta.value);
+  ta.onkeydown=e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();ask(ta.value)}};
+  ta.oninput=()=>{ta.style.height="auto";ta.style.height=Math.min(ta.scrollHeight,140)+"px"};
+  draw();ta.focus()}
+function saveHist(k,h){const c=chats();c[k]=h.slice(-40);store("pd_chats",c)}
+
+function go(d,t){sel=d;tab=t;location.hash=encodeURIComponent(d)+"/"+t;renderAll()}
+function renderAll(){renderSide();renderTop();renderBody()}
+function fromHash(){const[d,t]=location.hash.slice(1).split("/");sel=d?decodeURIComponent(d):"";tab=["report","logs","chat"].includes(t)?t:"report"}
+async function load(){
+  try{const[a,s]=await Promise.all([fetch("api/entries").then(r=>r.json()),fetch("api/status").then(r=>r.json())]);
+    const n=JSON.stringify([a,s.current&&s.current.dag_id,(s.queued||[]).length,s.current&&Math.floor(s.current.running_for/5)]);
+    data=a;status=s;$("upd").textContent="updated "+new Date().toLocaleTimeString();
+    if(n!==sig){sig=n;renderSide();renderTop();if(tab!=="chat")renderBody()}}
+  catch(e){$("upd").textContent="server unreachable"}}
+$("q").oninput=renderSide;window.onhashchange=()=>{fromHash();renderAll()};
+fromHash();renderAll();load();setInterval(load,4000);
+</script></body></html>

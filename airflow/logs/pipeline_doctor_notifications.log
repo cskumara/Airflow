@@ -1,0 +1,126 @@
+==== 2026-10-12T16:15:59Z | failing_dag | evidence ====
+DAG failing_dag FAILED (run manual__2026-10-12T16:15:53.405752+00:00)
+Failed tasks: divide
+Log tail for divide:
+    2026-10-12T16:15:55.851720Z info Filling up the DagBag from /opt/airflow/dags/failing_dag.py
+    2026-10-12T16:15:55.883983Z info Worker startup parse complete
+    2026-10-12T16:15:55.936550Z info ::endgroup::
+    2026-10-12T16:15:55.939804Z info Trying to divide 10 by zero...
+    2026-10-12T16:15:55.939722Z error Task failed with exception
+      File "/opt/airflow/dags/failing_dag.py", line 24, in divide
+      ZeroDivisionError: division by zero
+    2026-10-12T16:15:55.940451Z info ::group::Post Execute
+Earlier runs (newest first): failed failed failed failed failed
+
+==== 2026-10-12T17:17:00Z | failing_dag | evidence ====
+DAG failing_dag FAILED (run manual__2026-10-12T17:16:47.953135+00:00)
+Failed tasks: divide
+Log tail for divide:
+    2026-10-12T17:16:50.085477Z error Task failed with exception
+      File "/opt/airflow/dags/failing_dag.py", line 24, in divide
+      ZeroDivisionError: division by zero
+    2026-10-12T17:16:50.087696Z info ::group::Post Execute
+    2026-10-12T17:16:50.137687Z warning Skipping masking for a secret as it's too short (<5 chars)
+    2026-10-12T17:16:50.172211Z error pipeline-doctor: agent trigger failed
+      File "/usr/python/lib/python3.13/urllib/request.py", line 347, in _parse
+      ValueError: unknown url type: ''
+Earlier runs (newest first): failed failed failed failed failed failed
+
+==== 2026-10-12T17:18:58Z | failing_dag | evidence ====
+DAG failing_dag FAILED (run manual__2026-10-12T17:18:55.665263+00:00)
+Failed tasks: divide
+Log tail for divide:
+    2026-10-12T17:18:58.068830Z info Trying to divide 10 by zero...
+    2026-10-12T17:18:58.068753Z error Task failed with exception
+      File "/opt/airflow/dags/failing_dag.py", line 24, in divide
+      ZeroDivisionError: division by zero
+    2026-10-12T17:18:58.069331Z info ::group::Post Execute
+    2026-10-12T17:18:58.108545Z error pipeline-doctor: agent trigger failed
+      File "/usr/python/lib/python3.13/urllib/request.py", line 347, in _parse
+      ValueError: unknown url type: ''
+Earlier runs (newest first): failed failed failed failed failed failed failed
+
+==== 2026-10-12T17:20:47Z | failing_dag | evidence ====
+DAG failing_dag FAILED (run manual__2026-10-12T17:20:44.644931+00:00)
+Failed tasks: divide
+Log tail for divide:
+    2026-10-12T17:20:46.861985Z info Trying to divide 10 by zero...
+    2026-10-12T17:20:46.861916Z error Task failed with exception
+      File "/opt/airflow/dags/failing_dag.py", line 24, in divide
+      ZeroDivisionError: division by zero
+    2026-10-12T17:20:46.862433Z info ::group::Post Execute
+    2026-10-12T17:20:46.922543Z error pipeline-doctor: agent trigger failed
+      File "/usr/python/lib/python3.13/urllib/request.py", line 347, in _parse
+      ValueError: unknown url type: ''
+Earlier runs (newest first): failed failed failed failed failed failed failed failed
+
+==== 2026-10-12T17:22:17Z | failing_dag | evidence ====
+DAG failing_dag FAILED (run manual__2026-10-12T17:22:14.447901+00:00)
+Failed tasks: divide
+Log tail for divide:
+    2026-10-12T17:22:17.179188Z info Trying to divide 10 by zero...
+    2026-10-12T17:22:17.179135Z error Task failed with exception
+      File "/opt/airflow/dags/failing_dag.py", line 24, in divide
+      ZeroDivisionError: division by zero
+    2026-10-12T17:22:17.179816Z info ::group::Post Execute
+    2026-10-12T17:22:17.219448Z error pipeline-doctor: agent trigger failed
+      File "/usr/python/lib/python3.13/urllib/request.py", line 347, in _parse
+      ValueError: unknown url type: ''
+Earlier runs (newest first): failed failed failed failed failed failed failed failed failed
+
+==== 2026-10-12T17:23:51Z | failing_dag | evidence ====
+DAG failing_dag FAILED (run manual__2026-10-12T17:23:49.032507+00:00)
+Failed tasks: divide
+Log tail for divide:
+    2026-10-12T17:23:51.352887Z info Trying to divide 10 by zero...
+    2026-10-12T17:23:51.352822Z error Task failed with exception
+      File "/opt/airflow/dags/failing_dag.py", line 24, in divide
+      ZeroDivisionError: division by zero
+    2026-10-12T17:23:51.353304Z info ::group::Post Execute
+    2026-10-12T17:23:51.403004Z error pipeline-doctor: agent trigger failed
+      File "/usr/python/lib/python3.13/urllib/request.py", line 347, in _parse
+      ValueError: unknown url type: ''
+Earlier runs (newest first): failed failed failed failed failed failed failed failed failed
+
+==== 2026-10-12T17:25:10Z | failing_dag | evidence ====
+DAG failing_dag FAILED (run manual__2026-10-12T17:25:07.937085+00:00)
+Failed tasks: divide
+Log tail for divide:
+    2026-10-12T17:25:09.723662Z info Trying to divide 10 by zero...
+    2026-10-12T17:25:09.723608Z error Task failed with exception
+      File "/opt/airflow/dags/failing_dag.py", line 24, in divide
+      ZeroDivisionError: division by zero
+    2026-10-12T17:25:09.724420Z info ::group::Post Execute
+    2026-10-12T17:25:09.763098Z error pipeline-doctor: agent trigger failed
+      File "/usr/python/lib/python3.13/urllib/request.py", line 347, in _parse
+      ValueError: unknown url type: ''
+Earlier runs (newest first): failed failed failed failed failed failed failed failed failed
+
+==== 2026-10-12T17:26:07Z | failing_dag | evidence ====
+DAG failing_dag FAILED (run manual__2026-10-12T17:26:04.844115+00:00)
+Failed tasks: divide
+Log tail for divide:
+    2026-10-12T17:26:06.567005Z info Filling up the DagBag from /opt/airflow/dags/failing_dag.py
+    2026-10-12T17:26:06.650716Z info Worker startup parse complete
+    2026-10-12T17:26:06.687716Z info ::endgroup::
+    2026-10-12T17:26:06.689953Z info Trying to divide 10 by zero...
+    2026-10-12T17:26:06.689914Z error Task failed with exception
+      File "/opt/airflow/dags/failing_dag.py", line 24, in divide
+      ZeroDivisionError: division by zero
+    2026-10-12T17:26:06.690336Z info ::group::Post Execute
+Earlier runs (newest first): failed failed failed failed failed failed failed failed failed
+
+==== 2026-10-12T17:28:35Z | failing_dag | evidence ====
+DAG failing_dag FAILED (run manual__2026-10-12T17:28:32.908273+00:00)
+Failed tasks: divide
+Log tail for divide:
+    2026-10-12T17:28:34.586266Z info Filling up the DagBag from /opt/airflow/dags/failing_dag.py
+    2026-10-12T17:28:34.662349Z info Worker startup parse complete
+    2026-10-12T17:28:34.749077Z info ::endgroup::
+    2026-10-12T17:28:34.754246Z info Trying to divide 10 by zero...
+    2026-10-12T17:28:34.754184Z error Task failed with exception
+      File "/opt/airflow/dags/failing_dag.py", line 24, in divide
+      ZeroDivisionError: division by zero
+    2026-10-12T17:28:34.755227Z info ::group::Post Execute
+Earlier runs (newest first): failed failed failed failed failed failed failed failed failed
+
